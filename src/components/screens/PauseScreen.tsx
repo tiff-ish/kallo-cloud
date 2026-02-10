@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { FadeIn } from "../FadeIn";
-import { FrostedCard, Divider, GhostButton, PrimaryButton } from "../ui";
+import { SlideUp } from "../FadeIn";
+import { FrostedCard, Divider, GhostButton, PrimaryButton, ScreenShell } from "../ui";
 
 export function PauseScreen({ onSkip, onDone }: { onSkip: () => void; onDone: () => void }) {
   const [t, setT] = useState(9);
@@ -18,8 +18,8 @@ export function PauseScreen({ onSkip, onDone }: { onSkip: () => void; onDone: ()
   }, [t]);
 
   return (
-    <div className="mx-auto max-w-[420px] px-4 pb-28 pt-10">
-      <FadeIn>
+    <ScreenShell>
+      <SlideUp>
         <FrostedCard className="p-6">
           <div className="text-[11px] tracking-wide text-[rgba(18,20,23,0.58)]">10-second pause</div>
           <div className="mt-2 text-xl font-semibold text-[rgba(18,20,23,0.90)]">Look up.</div>
@@ -43,7 +43,7 @@ export function PauseScreen({ onSkip, onDone }: { onSkip: () => void; onDone: ()
 
           <div className="mt-4 text-xs text-[rgba(18,20,23,0.55)]">The sky is the teacher. The app is just the reminder.</div>
         </FrostedCard>
-      </FadeIn>
-    </div>
+      </SlideUp>
+    </ScreenShell>
   );
 }

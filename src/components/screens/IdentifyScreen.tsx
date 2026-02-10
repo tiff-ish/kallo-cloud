@@ -1,5 +1,5 @@
-import { FadeIn } from "../FadeIn";
-import { FrostedCard, GhostButton, PrimaryButton } from "../ui";
+import { SlideUp } from "../FadeIn";
+import { FrostedCard, GhostButton, PrimaryButton, ScreenShell } from "../ui";
 import { CLOUD_TYPES } from "../../lib/theme";
 
 export function IdentifyScreen({
@@ -15,8 +15,8 @@ export function IdentifyScreen({
 }) {
   const selected = CLOUD_TYPES.find((c) => c.slug === cloudType);
   return (
-    <div className="mx-auto max-w-[420px] px-4 pb-28 pt-6">
-      <FadeIn>
+    <ScreenShell>
+      <SlideUp>
         <FrostedCard className="p-6">
           <div className="text-[11px] tracking-wide text-[rgba(18,20,23,0.58)]">Step 1 of 3</div>
           <div className="mt-2 text-xl font-semibold text-[rgba(18,20,23,0.90)]">Name what you see.</div>
@@ -26,7 +26,7 @@ export function IdentifyScreen({
           <select
             value={cloudType}
             onChange={(e) => setCloudType(e.target.value)}
-            className="mt-2 w-full rounded-[20px] border border-black/10 bg-white/55 px-4 py-3 text-sm text-[rgba(18,20,23,0.88)] outline-none backdrop-blur transition focus:border-black/20"
+            className="mt-2 w-full rounded-[20px] border border-white/15 bg-white/55 px-4 py-3 text-sm text-[rgba(18,20,23,0.88)] outline-none backdrop-blur transition focus:border-black/20"
           >
             <option value="">Choose…</option>
             {CLOUD_TYPES.map((c) => (
@@ -49,7 +49,7 @@ export function IdentifyScreen({
 
           <div className="mt-4 text-xs text-[rgba(18,20,23,0.55)]">As you choose, the sky behind you shifts to match.</div>
         </FrostedCard>
-      </FadeIn>
-    </div>
+      </SlideUp>
+    </ScreenShell>
   );
 }

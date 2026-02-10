@@ -188,7 +188,7 @@ export default function App() {
         ) : flow === "reflect" ? (
           <ReflectScreen reflection={reflection} setReflection={setReflection} onBack={() => setFlow("describe")} onSave={saveEntry} canSave={canSave} />
         ) : tab === "home" ? (
-          <HomeScreen onBegin={beginMoment} onLibrary={goLibrary} install={install} onShowCue={showCue} />
+          <HomeScreen onBegin={beginMoment} onLibrary={goLibrary} install={install} onShowCue={showCue} entryCount={entries.length} />
         ) : tab === "library" ? (
           selectedEntry ? (
             <EntryViewer entry={selectedEntry} onDelete={deleteEntry} onClose={() => setViewerId(null)} />

@@ -1,7 +1,7 @@
 import type { JournalEntry } from "../../types";
 import { CLOUD_TYPES } from "../../lib/theme";
-import { FadeIn } from "../FadeIn";
-import { FrostedCard, Divider } from "../ui";
+import { SlideUp } from "../FadeIn";
+import { FrostedCard, Divider, ScreenShell } from "../ui";
 
 export function LibraryScreen({
   entries,
@@ -13,8 +13,8 @@ export function LibraryScreen({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="mx-auto max-w-[420px] px-4 pb-28 pt-6">
-      <FadeIn>
+    <ScreenShell>
+      <SlideUp>
         <FrostedCard className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -27,9 +27,9 @@ export function LibraryScreen({
           <div className="mt-3 text-sm text-[rgba(18,20,23,0.68)]">Open one, and look up again — even for a second.</div>
           <Divider />
 
-          <div className="mt-4 grid gap-2">
+          <div className="mt-4 grid gap-2 max-h-[45svh] overflow-y-auto">
             {entries.length === 0 ? (
-              <div className="rounded-[22px] border border-black/10 bg-white/40 p-4 text-sm text-[rgba(18,20,23,0.72)]">
+              <div className="rounded-[22px] border border-white/15 bg-white/40 p-4 text-sm text-[rgba(18,20,23,0.72)]">
                 No entries yet.
                 <div className="mt-2 text-xs text-[rgba(18,20,23,0.60)]">Tap "+" to begin a moment.</div>
               </div>
@@ -40,7 +40,7 @@ export function LibraryScreen({
                   onClick={() => onSelect(e.id)}
                   className={
                     "rounded-[22px] border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-black/10 " +
-                    (selectedId === e.id ? "border-black/20 bg-white/60" : "border-black/10 bg-white/40 hover:bg-white/55")
+                    (selectedId === e.id ? "border-black/20 bg-white/60" : "border-white/15 bg-white/40 hover:bg-white/55")
                   }
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -59,7 +59,7 @@ export function LibraryScreen({
 
           {entries.length > 40 ? <div className="mt-3 text-xs text-[rgba(18,20,23,0.55)]">Showing the most recent 40.</div> : null}
         </FrostedCard>
-      </FadeIn>
-    </div>
+      </SlideUp>
+    </ScreenShell>
   );
 }

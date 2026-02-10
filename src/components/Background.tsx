@@ -1,7 +1,17 @@
 import React from "react";
 import type { Theme, Parallax } from "../types";
 
+const MOOD_PHOTOS: Record<string, string> = {
+  neutral: "/backgrounds/neutral.jpg",
+  warm: "/backgrounds/warm.jpg",
+  deep: "/backgrounds/deep.jpg",
+  cool: "/backgrounds/cool.jpg",
+};
+
 export function Background({ theme, parallax }: { theme: Theme; parallax: Parallax }) {
+  const mood = theme.mood || "neutral";
+  const allMoods = ["neutral", "warm", "deep", "cool"] as const;
+
   const style = {
     "--a": theme.a,
     "--b": theme.b,
@@ -15,10 +25,33 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
 
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden" style={style}>
+      {/* Base dark fill */}
       <div className="absolute inset-0" style={{ background: "#0c0d10" }} />
 
+      {/* Photo layer — all images mounted, only active one visible (crossfade) */}
+      {allMoods.map((m) => (
+        <div
+          key={m}
+          className="absolute -inset-[8%] will-change-transform"
+          style={{
+            opacity: mood === m ? 1 : 0,
+            transition: "opacity 800ms ease",
+            transform: `translate3d(calc(var(--px) * 0.08), calc(var(--py) * 0.08), 0)`,
+          }}
+        >
+          <img
+            src={MOOD_PHOTOS[m]}
+            alt=""
+            className="h-full w-full object-cover"
+            loading={m === "neutral" ? "eager" : "lazy"}
+            draggable={false}
+          />
+        </div>
+      ))}
+
+      {/* Tinted gradient overlay — reduced opacity to let photo show through */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 opacity-70"
         style={{
           background: `
             radial-gradient(1200px 700px at 20% 18%, var(--b), transparent 62%),
@@ -26,11 +59,13 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
             radial-gradient(900px 620px at 48% 78%, var(--c), transparent 55%),
             linear-gradient(180deg, rgba(242,237,230,0.02), rgba(0,0,0,0.14))
           `,
+          transition: "background 800ms ease",
         }}
       />
 
+      {/* Drifting cloud-like overlay */}
       <div
-        className="absolute -inset-[30%] opacity-50 will-change-transform"
+        className="absolute -inset-[30%] opacity-35 will-change-transform"
         style={{ transform: `translate3d(calc(var(--px) * 0.12), calc(var(--py) * 0.12), 0)` }}
       >
         <div
@@ -46,8 +81,9 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
         />
       </div>
 
+      {/* Grain / sparkle layer */}
       <div
-        className="absolute inset-0 opacity-60 mix-blend-soft-light"
+        className="absolute inset-0 opacity-50 mix-blend-soft-light"
         style={{ transform: `translate3d(calc(var(--px) * 0.05), calc(var(--py) * 0.05), 0)` }}
       >
         <div
@@ -62,11 +98,22 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
         />
       </div>
 
+      {/* Vignette */}
       <div
         className="absolute inset-0"
-        style={{ background: `radial-gradient(1200px 700px at 50% 45%, transparent 55%, var(--vig))` }}
+        style={{
+          background: `radial-gradient(1200px 700px at 50% 45%, transparent 55%, var(--vig))`,
+          transition: "background 800ms ease",
+        }}
       />
-      <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, var(--haze), transparent 42%)` }} />
+      {/* Haze */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(180deg, var(--haze), transparent 42%)`,
+          transition: "background 800ms ease",
+        }}
+      />
 
       <style>{`
         @keyframes drift {

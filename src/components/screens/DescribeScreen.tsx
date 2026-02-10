@@ -1,5 +1,5 @@
-import { FadeIn } from "../FadeIn";
-import { FrostedCard, GhostButton, PrimaryButton } from "../ui";
+import { SlideUp } from "../FadeIn";
+import { FrostedCard, GhostButton, PrimaryButton, ScreenShell } from "../ui";
 
 export function DescribeScreen({
   cloudDescription,
@@ -13,8 +13,8 @@ export function DescribeScreen({
   onBack: () => void;
 }) {
   return (
-    <div className="mx-auto max-w-[420px] px-4 pb-28 pt-6">
-      <FadeIn>
+    <ScreenShell>
+      <SlideUp>
         <FrostedCard className="p-6">
           <div className="text-[11px] tracking-wide text-[rgba(18,20,23,0.58)]">Step 2 of 3</div>
           <div className="mt-2 text-xl font-semibold text-[rgba(18,20,23,0.90)]">Write a scene note.</div>
@@ -25,7 +25,7 @@ export function DescribeScreen({
             value={cloudDescription}
             onChange={(e) => setCloudDescription(e.target.value)}
             placeholder='e.g., "wispy and pink at sunset"'
-            className="mt-2 w-full rounded-[20px] border border-black/10 bg-white/55 px-4 py-3 text-sm text-[rgba(18,20,23,0.88)] outline-none backdrop-blur transition placeholder:text-[rgba(18,20,23,0.45)] focus:border-black/20"
+            className="mt-2 w-full rounded-[20px] border border-white/15 bg-white/55 px-4 py-3 text-sm text-[rgba(18,20,23,0.88)] outline-none backdrop-blur transition placeholder:text-[rgba(18,20,23,0.45)] focus:border-black/20"
             maxLength={140}
           />
           <div className="mt-2 flex items-center justify-between text-xs text-[rgba(18,20,23,0.55)]">
@@ -44,7 +44,7 @@ export function DescribeScreen({
 
           <div className="mt-4 text-xs text-[rgba(18,20,23,0.55)]">Those words softly steer the mood of the background.</div>
         </FrostedCard>
-      </FadeIn>
-    </div>
+      </SlideUp>
+    </ScreenShell>
   );
 }
