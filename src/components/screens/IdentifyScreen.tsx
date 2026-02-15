@@ -31,12 +31,12 @@ export function IdentifyScreen({
             <option value="">Choose…</option>
             {CLOUD_TYPES.map((c) => (
               <option key={c.slug} value={c.slug}>
-                {c.name}
+                {c.name} ({c.hint})
               </option>
             ))}
           </select>
 
-          <div className="mt-2 text-xs text-[rgba(18,20,23,0.60)]">{selected ? <>Hint: {selected.hint}</> : 'Not sure? Pick "Not sure / Other."'}</div>
+          <div className="mt-2 text-xs text-[rgba(18,20,23,0.60)]">{selected ? <>Hint: {selected.hint}</> : 'Not sure? Pick "Other / Not sure."'}</div>
 
           <div className="mt-6 flex items-center gap-2">
             <GhostButton onClick={onBack} className="flex-1">

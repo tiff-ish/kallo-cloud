@@ -18,6 +18,7 @@ export type Theme = {
   vignette: string;
   drift: number;
   mood?: "neutral" | "deep" | "warm" | "cool";
+  surrealIntensity?: number; // 0 = realistic, 1 = fully surreal
 };
 
 export type Parallax = { x: number; y: number };

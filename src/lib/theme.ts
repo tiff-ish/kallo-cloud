@@ -16,35 +16,20 @@ export const PALETTE = {
 };
 
 export const CLOUD_TYPES: Array<{ slug: string; name: string; hint: string }> = [
-  { slug: "cumulus", name: "Cumulus", hint: "puffy, cotton-like" },
-  { slug: "stratus", name: "Stratus", hint: "low, flat layers" },
   { slug: "cirrus", name: "Cirrus", hint: "high, wispy strands" },
-  { slug: "nimbus", name: "Nimbus", hint: "rain-bearing" },
-  { slug: "cumulonimbus", name: "Cumulonimbus", hint: "towering storm clouds" },
+  { slug: "cumulus", name: "Cumulus", hint: "puffy, cotton-like" },
+  { slug: "cirrostratus", name: "Cirrostratus", hint: "thin halo sheet" },
+  { slug: "nimbostratus", name: "Nimbostratus", hint: "rain-bearing layers" },
+  { slug: "cirrocumulus", name: "Cirrocumulus", hint: "high, patchy ripples" },
   { slug: "stratocumulus", name: "Stratocumulus", hint: "lumpy layers" },
+  { slug: "stratus", name: "Stratus", hint: "low, flat layers" },
   { slug: "altocumulus", name: "Altocumulus", hint: "mid-level patches" },
   { slug: "altostratus", name: "Altostratus", hint: "mid-level veil" },
-  { slug: "cirrostratus", name: "Cirrostratus", hint: "thin halo sheet" },
-  { slug: "other", name: "Not sure / Other", hint: "best guess is perfect" },
+  { slug: "cumulonimbus", name: "Cumulonimbus", hint: "towering storm clouds" },
+  { slug: "other", name: "Other / Not sure", hint: "best guess is perfect" },
 ];
 
-const BASE_THEMES: Record<string, Theme> = {
-  cumulus: {
-    a: PALETTE.lavenderLight,
-    b: PALETTE.paperSolid,
-    c: PALETTE.kraft,
-    haze: "rgba(242,237,230,0.22)",
-    vignette: "rgba(0,0,0,0.22)",
-    drift: 22,
-  },
-  stratus: {
-    a: "#b7b1a8",
-    b: "#e7e2da",
-    c: PALETTE.slate,
-    haze: "rgba(242,237,230,0.18)",
-    vignette: "rgba(0,0,0,0.26)",
-    drift: 16,
-  },
+const BASE_THEMES: Record<string, Omit<Theme, "mood" | "surrealIntensity">> = {
   cirrus: {
     a: PALETTE.paperSolid,
     b: "#f6f1ea",
@@ -53,7 +38,23 @@ const BASE_THEMES: Record<string, Theme> = {
     vignette: "rgba(0,0,0,0.20)",
     drift: 28,
   },
-  nimbus: {
+  cumulus: {
+    a: PALETTE.lavenderLight,
+    b: PALETTE.paperSolid,
+    c: PALETTE.kraft,
+    haze: "rgba(242,237,230,0.22)",
+    vignette: "rgba(0,0,0,0.22)",
+    drift: 22,
+  },
+  cirrostratus: {
+    a: PALETTE.paperSolid,
+    b: "#fbf6ef",
+    c: PALETTE.lavenderLight,
+    haze: "rgba(242,237,230,0.26)",
+    vignette: "rgba(0,0,0,0.18)",
+    drift: 26,
+  },
+  nimbostratus: {
     a: "#3d4956",
     b: "#0f141c",
     c: "#6a7886",
@@ -61,13 +62,13 @@ const BASE_THEMES: Record<string, Theme> = {
     vignette: "rgba(0,0,0,0.46)",
     drift: 12,
   },
-  cumulonimbus: {
-    a: "#2a323d",
-    b: "#0b1119",
-    c: "#5c6876",
-    haze: "rgba(242,237,230,0.08)",
-    vignette: "rgba(0,0,0,0.52)",
-    drift: 10,
+  cirrocumulus: {
+    a: PALETTE.paperSolid,
+    b: "#f6f1ea",
+    c: PALETTE.seaGlass,
+    haze: "rgba(242,237,230,0.24)",
+    vignette: "rgba(0,0,0,0.20)",
+    drift: 26,
   },
   stratocumulus: {
     a: PALETTE.kraft,
@@ -76,6 +77,14 @@ const BASE_THEMES: Record<string, Theme> = {
     haze: "rgba(242,237,230,0.18)",
     vignette: "rgba(0,0,0,0.26)",
     drift: 18,
+  },
+  stratus: {
+    a: "#b7b1a8",
+    b: "#e7e2da",
+    c: PALETTE.slate,
+    haze: "rgba(242,237,230,0.18)",
+    vignette: "rgba(0,0,0,0.26)",
+    drift: 16,
   },
   altocumulus: {
     a: PALETTE.lavender,
@@ -93,13 +102,13 @@ const BASE_THEMES: Record<string, Theme> = {
     vignette: "rgba(0,0,0,0.24)",
     drift: 18,
   },
-  cirrostratus: {
-    a: PALETTE.paperSolid,
-    b: "#fbf6ef",
-    c: PALETTE.lavenderLight,
-    haze: "rgba(242,237,230,0.26)",
-    vignette: "rgba(0,0,0,0.18)",
-    drift: 26,
+  cumulonimbus: {
+    a: "#2a323d",
+    b: "#0b1119",
+    c: "#5c6876",
+    haze: "rgba(242,237,230,0.08)",
+    vignette: "rgba(0,0,0,0.52)",
+    drift: 10,
   },
   other: {
     a: PALETTE.lavenderLight,
@@ -109,6 +118,20 @@ const BASE_THEMES: Record<string, Theme> = {
     vignette: "rgba(0,0,0,0.22)",
     drift: 22,
   },
+};
+
+const CLOUD_TO_MOOD: Record<string, "neutral" | "warm" | "deep" | "cool"> = {
+  cirrus: "cool",
+  cirrocumulus: "cool",
+  nimbostratus: "deep",
+  cumulonimbus: "deep",
+  cumulus: "neutral",
+  cirrostratus: "neutral",
+  stratocumulus: "neutral",
+  stratus: "neutral",
+  altocumulus: "neutral",
+  altostratus: "neutral",
+  other: "neutral",
 };
 
 type MoodMod = {
@@ -146,6 +169,30 @@ const MOOD_MODS: Array<{ keys: string[]; mod: MoodMod }> = [
   },
 ];
 
+const SUGGEST_KEYWORDS: Array<{ keys: string[]; slug: string; name: string }> = [
+  { keys: ["wispy", "feathery", "high", "delicate", "strands", "hair"], slug: "cirrus", name: "Cirrus" },
+  { keys: ["puffy", "cotton", "fluffy", "pillow", "cumulus"], slug: "cumulus", name: "Cumulus" },
+  { keys: ["halo", "sheet", "thin", "veil", "milky"], slug: "cirrostratus", name: "Cirrostratus" },
+  { keys: ["rain", "storm", "dark", "heavy", "grey", "gray", "continuous", "drizzle"], slug: "nimbostratus", name: "Nimbostratus" },
+  { keys: ["ripples", "patchy", "mackerel", "fish"], slug: "cirrocumulus", name: "Cirrocumulus" },
+  { keys: ["lumpy", "patches", "rolls", "bumpy"], slug: "stratocumulus", name: "Stratocumulus" },
+  { keys: ["flat", "layers", "low", "gray", "grey", "overcast", "blanket"], slug: "stratus", name: "Stratus" },
+  { keys: ["mid-level", "patches", "fluffy patches"], slug: "altocumulus", name: "Altocumulus" },
+  { keys: ["mid-level", "veil", "sheet"], slug: "altostratus", name: "Altostratus" },
+  { keys: ["towering", "storm", "thunder", "anvil", "cauliflower"], slug: "cumulonimbus", name: "Cumulonimbus" },
+];
+
+export function suggestCloudFromDescription(description: string): { slug: string; name: string } | null {
+  const text = (description || "").toLowerCase().trim();
+  if (!text) return null;
+  for (const rule of SUGGEST_KEYWORDS) {
+    if (rule.keys.some((k) => text.includes(k))) {
+      return { slug: rule.slug, name: rule.name };
+    }
+  }
+  return null;
+}
+
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
@@ -177,6 +224,8 @@ export function deriveTheme(cloudType: string, description: string): Theme {
   const base = BASE_THEMES[cloudType] || BASE_THEMES.other;
   const text = (description || "").toLowerCase();
 
+  const surrealIntensity = text.trim().length === 0 ? 0 : Math.min(1, text.trim().length / 40);
+
   let best: MoodMod | null = null;
   for (const rule of MOOD_MODS) {
     if (rule.keys.some((k) => text.includes(k))) {
@@ -185,7 +234,10 @@ export function deriveTheme(cloudType: string, description: string): Theme {
     }
   }
 
-  if (!best) return { ...base, mood: "neutral" };
+  if (!best) {
+    const mood = CLOUD_TO_MOOD[cloudType] ?? "neutral";
+    return { ...base, mood, surrealIntensity };
+  }
 
   const blend = best.deepen ? 0.55 : 0.42;
   const a = lerpColor(base.a, best.tintA, blend);
@@ -196,6 +248,8 @@ export function deriveTheme(cloudType: string, description: string): Theme {
   const vignette = best.deepen ? "rgba(0,0,0,0.56)" : base.vignette;
   const haze = best.deepen ? "rgba(242,237,230,0.09)" : base.haze;
 
+  const mood = best.deepen ? "deep" : best.warmth > 0 ? "warm" : "cool";
+
   return {
     ...base,
     a,
@@ -204,6 +258,7 @@ export function deriveTheme(cloudType: string, description: string): Theme {
     drift,
     haze,
     vignette,
-    mood: best.deepen ? "deep" : best.warmth > 0 ? "warm" : "cool",
+    mood,
+    surrealIntensity,
   };
 }

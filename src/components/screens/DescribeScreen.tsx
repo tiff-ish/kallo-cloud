@@ -1,17 +1,31 @@
 import { SlideUp } from "../FadeIn";
 import { FrostedCard, GhostButton, PrimaryButton, ScreenShell } from "../ui";
+import { suggestCloudFromDescription } from "../../lib/theme";
 
 export function DescribeScreen({
+  cloudType,
   cloudDescription,
   setCloudDescription,
   onNext,
   onBack,
 }: {
+  cloudType: string;
   cloudDescription: string;
   setCloudDescription: (s: string) => void;
   onNext: () => void;
   onBack: () => void;
 }) {
+  const suggestion = cloudType === "other" ? suggestCloudFromDescription(cloudDescription) : null;
+
+  const footerCopy =
+    cloudType === "other"
+      ? cloudDescription.trim() === ""
+        ? "Simply noticing something beyond this app is enough."
+        : suggestion
+          ? `This might be ${suggestion.name} — no need to change if it feels right.`
+          : "Those words softly steer the mood of the background."
+      : "Those words softly steer the mood of the background.";
+
   return (
     <ScreenShell>
       <SlideUp>
@@ -42,7 +56,7 @@ export function DescribeScreen({
             </PrimaryButton>
           </div>
 
-          <div className="mt-4 text-xs text-[rgba(18,20,23,0.55)]">Those words softly steer the mood of the background.</div>
+          <div className="mt-4 text-xs text-[rgba(18,20,23,0.55)]">{footerCopy}</div>
         </FrostedCard>
       </SlideUp>
     </ScreenShell>

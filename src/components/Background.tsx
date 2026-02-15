@@ -11,6 +11,10 @@ const MOOD_PHOTOS: Record<string, string> = {
 export function Background({ theme, parallax }: { theme: Theme; parallax: Parallax }) {
   const mood = theme.mood || "neutral";
   const allMoods = ["neutral", "warm", "deep", "cool"] as const;
+  const surreal = theme.surrealIntensity ?? 0;
+
+  const photoOpacity = 1 - surreal * 0.3;
+  const gradientOpacity = 0.7 + surreal * 0.25;
 
   const style = {
     "--a": theme.a,
@@ -28,13 +32,13 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
       {/* Base dark fill */}
       <div className="absolute inset-0" style={{ background: "#0c0d10" }} />
 
-      {/* Photo layer — all images mounted, only active one visible (crossfade) */}
+      {/* Photo layer — opacity fades as surrealIntensity increases */}
       {allMoods.map((m) => (
         <div
           key={m}
           className="absolute -inset-[8%] will-change-transform"
           style={{
-            opacity: mood === m ? 1 : 0,
+            opacity: mood === m ? photoOpacity : 0,
             transition: "opacity 800ms ease",
             transform: `translate3d(calc(var(--px) * 0.08), calc(var(--py) * 0.08), 0)`,
           }}
@@ -49,19 +53,32 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
         </div>
       ))}
 
-      {/* Tinted gradient overlay — reduced opacity to let photo show through */}
+      {/* Tinted gradient overlay — strength increases with surrealIntensity */}
       <div
-        className="absolute inset-0 opacity-70"
+        className="absolute inset-0"
         style={{
+          opacity: gradientOpacity,
           background: `
             radial-gradient(1200px 700px at 20% 18%, var(--b), transparent 62%),
             radial-gradient(1000px 650px at 78% 24%, var(--a), transparent 58%),
             radial-gradient(900px 620px at 48% 78%, var(--c), transparent 55%),
             linear-gradient(180deg, rgba(242,237,230,0.02), rgba(0,0,0,0.14))
           `,
-          transition: "background 800ms ease",
+          transition: "opacity 800ms ease, background 800ms ease",
         }}
       />
+
+      {/* Surreal color wash — appears when scene note steers mood */}
+      {surreal > 0 ? (
+        <div
+          className="absolute inset-0 mix-blend-soft-light"
+          style={{
+            opacity: surreal * 0.25,
+            background: `radial-gradient(800px 500px at 30% 30%, var(--a), transparent 60%), radial-gradient(600px 400px at 70% 60%, var(--c), transparent 55%)`,
+            transition: "opacity 800ms ease",
+          }}
+        />
+      ) : null}
 
       {/* Drifting cloud-like overlay */}
       <div

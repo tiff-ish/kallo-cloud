@@ -184,7 +184,7 @@ export default function App() {
         ) : flow === "identify" ? (
           <IdentifyScreen cloudType={cloudType} setCloudType={setCloudType} onBack={() => setFlow("pause")} onNext={() => setFlow("describe")} />
         ) : flow === "describe" ? (
-          <DescribeScreen cloudDescription={cloudDescription} setCloudDescription={setCloudDescription} onBack={() => setFlow("identify")} onNext={() => setFlow("reflect")} />
+          <DescribeScreen cloudType={cloudType} cloudDescription={cloudDescription} setCloudDescription={setCloudDescription} onBack={() => setFlow("identify")} onNext={() => setFlow("reflect")} />
         ) : flow === "reflect" ? (
           <ReflectScreen reflection={reflection} setReflection={setReflection} onBack={() => setFlow("describe")} onSave={saveEntry} canSave={canSave} />
         ) : tab === "home" ? (
