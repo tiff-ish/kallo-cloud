@@ -1,7 +1,8 @@
 import type { JournalEntry } from "../../types";
 import { CLOUD_TYPES } from "../../lib/theme";
 import { SlideUp } from "../FadeIn";
-import { FrostedCard, Divider, ScreenShell } from "../ui";
+import { GlassCard } from "../ui";
+import { Icon } from "../Icon";
 
 export function LibraryScreen({
   entries,
@@ -13,53 +14,93 @@ export function LibraryScreen({
   onSelect: (id: string) => void;
 }) {
   return (
-    <ScreenShell>
-      <SlideUp>
-        <FrostedCard className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[11px] tracking-wide text-[rgba(18,20,23,0.58)]">Library</div>
-              <div className="mt-1 text-xl font-semibold text-[rgba(18,20,23,0.90)]">Past moments</div>
-            </div>
-            <div className="text-xs text-[rgba(18,20,23,0.60)]">{entries.length}</div>
+    <div className="flex min-h-[100svh] flex-col">
+      <div className="mx-auto w-full max-w-[480px] px-5 pt-20 pb-32">
+        <SlideUp>
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="font-serif-display text-3xl font-bold text-white">
+              Library
+            </h1>
+            <p className="mt-1 text-sm text-white/65">
+              {entries.length === 0
+                ? "No reflections yet"
+                : `${entries.length} moment${entries.length !== 1 ? "s" : ""} captured`}
+            </p>
           </div>
 
-          <div className="mt-3 text-sm text-[rgba(18,20,23,0.68)]">Open one, and look up again — even for a second.</div>
-          <Divider />
-
-          <div className="mt-4 grid gap-2 max-h-[45svh] overflow-y-auto">
+          {/* Entry list */}
+          <div className="grid gap-3">
             {entries.length === 0 ? (
-              <div className="rounded-[22px] border border-white/15 bg-white/40 p-4 text-sm text-[rgba(18,20,23,0.72)]">
-                No entries yet.
-                <div className="mt-2 text-xs text-[rgba(18,20,23,0.60)]">Tap "+" to begin a moment.</div>
-              </div>
+              <GlassCard className="p-6 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/30">
+                  <Icon name="cloud" size={28} color="#2C3E50" />
+                </div>
+                <p className="mt-4 font-serif-display text-lg font-semibold text-[#2C3E50]">
+                  No entries yet
+                </p>
+                <p className="mt-1 text-sm text-[#546E7A]">
+                  Tap the + button to begin a moment
+                </p>
+              </GlassCard>
             ) : (
-              entries.slice(0, 40).map((e) => (
-                <button
-                  key={e.id}
-                  onClick={() => onSelect(e.id)}
-                  className={
-                    "rounded-[22px] border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-black/10 " +
-                    (selectedId === e.id ? "border-black/20 bg-white/60" : "border-white/15 bg-white/40 hover:bg-white/55")
-                  }
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="text-sm font-semibold text-[rgba(18,20,23,0.88)]">{CLOUD_TYPES.find((c) => c.slug === e.cloudType)?.name || "Moment"}</div>
-                    <div className="text-xs text-[rgba(18,20,23,0.55)]">{new Date(e.createdAt).toLocaleDateString()}</div>
-                  </div>
-                  <div className="mt-1 text-xs text-[rgba(18,20,23,0.68)] line-clamp-1">{e.cloudDescription?.trim() ? e.cloudDescription.trim() : "—"}</div>
-                  <div className="mt-2 text-xs text-[rgba(18,20,23,0.60)] line-clamp-2">
-                    {(e.reflection || "").trim().slice(0, 86)}
-                    {(e.reflection || "").trim().length > 86 ? "…" : ""}
-                  </div>
-                </button>
-              ))
+              entries.slice(0, 40).map((e) => {
+                const cloudInfo = CLOUD_TYPES.find((c) => c.slug === e.cloudType);
+                const isActive = selectedId === e.id;
+
+                return (
+                  <button
+                    key={e.id}
+                    onClick={() => onSelect(e.id)}
+                    className={
+                      "flex gap-4 rounded-[20px] p-4 text-left transition-all focus:outline-none " +
+                      (isActive
+                        ? "glass-strong ring-1 ring-white/40"
+                        : "glass hover:bg-white/55 active:scale-[0.98]")
+                    }
+                  >
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-white/40">
+                      <img
+                        src={cloudInfo?.image || "/clouds/other.png"}
+                        alt={cloudInfo?.name || "Cloud"}
+                        className="h-10 w-10 object-contain"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-serif-display text-sm font-semibold text-[#2C3E50]">
+                          {cloudInfo?.name || "Moment"}
+                        </span>
+                        <span className="text-[10px] font-medium text-[#546E7A]/60">
+                          {new Date(e.createdAt).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+                      {e.cloudDescription?.trim() && (
+                        <div className="mt-0.5 text-xs text-[#546E7A] line-clamp-1">
+                          {e.cloudDescription.trim()}
+                        </div>
+                      )}
+                      <div className="mt-1 text-xs text-[#546E7A]/70 line-clamp-2">
+                        {(e.reflection || "").trim().slice(0, 86)}
+                        {(e.reflection || "").trim().length > 86 ? "..." : ""}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })
             )}
           </div>
 
-          {entries.length > 40 ? <div className="mt-3 text-xs text-[rgba(18,20,23,0.55)]">Showing the most recent 40.</div> : null}
-        </FrostedCard>
-      </SlideUp>
-    </ScreenShell>
+          {entries.length > 40 && (
+            <p className="mt-4 text-center text-xs text-white/50">
+              Showing the most recent 40
+            </p>
+          )}
+        </SlideUp>
+      </div>
+    </div>
   );
 }

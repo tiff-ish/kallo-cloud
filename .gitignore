@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Python tooling (image processing)
+.pylibs/
+.u2net/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

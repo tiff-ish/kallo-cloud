@@ -11,13 +11,12 @@ export type TabKey = "home" | "library" | "about";
 export type FlowKey = "idle" | "cue" | "pause" | "identify" | "describe" | "reflect";
 
 export type Theme = {
-  a: string;
-  b: string;
-  c: string;
-  haze: string;
-  vignette: string;
+  gradientStart: string;
+  gradientEnd: string;
+  accent: string;
+  mood: "neutral" | "deep" | "warm" | "cool";
+  surrealIntensity: number; // 0 = realistic, 1 = fully surreal
   drift: number;
-  mood?: "neutral" | "deep" | "warm" | "cool";
 };
 
 export type Parallax = { x: number; y: number };
