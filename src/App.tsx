@@ -158,7 +158,13 @@ export default function App() {
     }
   };
 
-  const canSave = useMemo(() => (reflection || "").trim().length > 0 && (cloudType || "").trim().length > 0, [reflection, cloudType]);
+  const canSave = useMemo(
+    () => (reflection || "").trim().length > 0 && (cloudType || "").trim().length > 0,
+    [reflection, cloudType],
+  );
+
+  // Determine if we should hide chrome during flow
+  const inFlow = flow !== "idle" && flow !== "cue";
 
   // --- Render ---
 
@@ -166,15 +172,17 @@ export default function App() {
     <div className="min-h-[100svh]">
       <Background theme={theme} parallax={parallax} />
 
-      <TopPillNav
-        active={tab}
-        onNav={(k) => {
-          setFlow("idle");
-          setViewerId(null);
-          setTab(k);
-        }}
-        install={install}
-      />
+      {!inFlow && (
+        <TopPillNav
+          active={tab}
+          onNav={(k) => {
+            setFlow("idle");
+            setViewerId(null);
+            setTab(k);
+          }}
+          install={install}
+        />
+      )}
 
       <main className="relative z-10">
         {flow === "cue" ? (
@@ -182,13 +190,39 @@ export default function App() {
         ) : flow === "pause" ? (
           <PauseScreen onSkip={() => setFlow("identify")} onDone={() => setFlow("identify")} />
         ) : flow === "identify" ? (
-          <IdentifyScreen cloudType={cloudType} setCloudType={setCloudType} onBack={() => setFlow("pause")} onNext={() => setFlow("describe")} />
+          <IdentifyScreen
+            cloudType={cloudType}
+            setCloudType={setCloudType}
+            onBack={() => setFlow("pause")}
+            onNext={() => setFlow("describe")}
+          />
         ) : flow === "describe" ? (
-          <DescribeScreen cloudType={cloudType} cloudDescription={cloudDescription} setCloudDescription={setCloudDescription} onBack={() => setFlow("identify")} onNext={() => setFlow("reflect")} />
+          <DescribeScreen
+            cloudType={cloudType}
+            cloudDescription={cloudDescription}
+            setCloudDescription={setCloudDescription}
+            onBack={() => setFlow("identify")}
+            onNext={() => setFlow("reflect")}
+          />
         ) : flow === "reflect" ? (
-          <ReflectScreen reflection={reflection} setReflection={setReflection} onBack={() => setFlow("describe")} onSave={saveEntry} canSave={canSave} />
+          <ReflectScreen
+            reflection={reflection}
+            setReflection={setReflection}
+            cloudType={cloudType}
+            onBack={() => setFlow("describe")}
+            onSave={saveEntry}
+            canSave={canSave}
+          />
         ) : tab === "home" ? (
-          <HomeScreen onBegin={beginMoment} onLibrary={goLibrary} install={install} onShowCue={showCue} entryCount={entries.length} />
+          <HomeScreen
+            onBegin={beginMoment}
+            onLibrary={goLibrary}
+            install={install}
+            onShowCue={showCue}
+            entryCount={entries.length}
+            entries={entries}
+            onSelectEntry={openEntry}
+          />
         ) : tab === "library" ? (
           selectedEntry ? (
             <EntryViewer entry={selectedEntry} onDelete={deleteEntry} onClose={() => setViewerId(null)} />
@@ -200,11 +234,9 @@ export default function App() {
         )}
       </main>
 
-      <Dock current={dockCurrent} onGo={onDockGo} />
+      {!inFlow && <Dock current={dockCurrent} onGo={onDockGo} />}
 
       {toast.toast ? <Toast message={toast.toast.message} /> : null}
-
-      <div className="h-24" />
 
       <SelfTests />
     </div>
@@ -214,7 +246,7 @@ export default function App() {
 function SelfTests() {
   useEffect(() => {
     try {
-      console.assert(typeof deriveTheme("cumulus", "")?.a === "string", "deriveTheme should return theme colors");
+      console.assert(typeof deriveTheme("cumulus", "")?.gradientStart === "string", "deriveTheme should return theme colors");
       console.assert(normalizeEntry({ cloudType: "cumulus", reflection: "x" }).id.length > 0, "normalizeEntry should create id");
     } catch {
       // ignore

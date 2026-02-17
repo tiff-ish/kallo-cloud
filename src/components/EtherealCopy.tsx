@@ -20,17 +20,20 @@ export function EtherealCopy({ lines, onTap, className = "" }: { lines: string[]
   if (!lines.length) return null;
 
   return (
-    <button onClick={onTap} className={"w-full text-center focus:outline-none focus:ring-2 focus:ring-black/10 " + className} aria-label="Continue">
+    <button onClick={onTap} className={"w-full text-center focus:outline-none " + className} aria-label="Continue">
       <div
         className={
-          "mx-auto max-w-[26ch] select-none text-[15px] leading-relaxed text-[rgba(242,237,230,0.88)] transition-opacity duration-700 " +
+          "font-serif-display mx-auto max-w-[26ch] select-none text-lg leading-relaxed text-white/90 transition-opacity duration-700 " +
           (visible ? "opacity-100" : "opacity-0")
         }
-        style={{ textShadow: "0 20px 50px rgba(0,0,0,0.45)" }}
+        style={{ textShadow: "0 2px 20px rgba(0,0,0,0.3)" }}
       >
         {lines[idx]}
       </div>
-      <div className="mt-3 text-[11px] text-[rgba(242,237,230,0.62)]" style={{ textShadow: "0 20px 50px rgba(0,0,0,0.45)" }}>
+      <div
+        className="mt-4 text-xs font-medium text-white/50"
+        style={{ textShadow: "0 1px 10px rgba(0,0,0,0.2)" }}
+      >
         tap to begin
       </div>
     </button>

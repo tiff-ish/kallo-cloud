@@ -6,24 +6,30 @@ export function Dock({ current, onGo }: { current: DockTarget; onGo: (k: DockTar
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 pb-[max(14px,env(safe-area-inset-bottom))]">
       <div className="pointer-events-auto mx-auto w-fit">
-        <div className="flex items-center gap-2 rounded-full border border-black/10 bg-[rgba(242,237,230,0.42)] px-2 py-2 backdrop-blur-xl shadow-[0_18px_60px_rgba(0,0,0,0.22)]">
+        <div className="glass flex items-center gap-1.5 rounded-full px-2 py-2">
           {(
             [
-              { k: "home", icon: "home" },
-              { k: "new", icon: "plus" },
-              { k: "library", icon: "book" },
+              { k: "home", icon: "home", label: "Home" },
+              { k: "new", icon: "plus", label: "New" },
+              { k: "library", icon: "book", label: "Library" },
             ] as const
           ).map((b) => (
             <button
               key={b.k}
               onClick={() => onGo(b.k)}
               className={
-                "grid h-10 w-10 place-items-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-black/10 " +
-                (current === b.k ? "bg-white/65" : "bg-white/35 hover:bg-white/55")
+                "flex h-11 w-11 items-center justify-center rounded-full transition-all focus:outline-none " +
+                (current === b.k
+                  ? "bg-white/70 shadow-sm"
+                  : "bg-transparent hover:bg-white/30")
               }
-              aria-label={b.k}
+              aria-label={b.label}
             >
-              <Icon name={b.icon} />
+              <Icon
+                name={b.icon}
+                size={18}
+                color={current === b.k ? "#2C3E50" : "rgba(44,62,80,0.55)"}
+              />
             </button>
           ))}
         </div>

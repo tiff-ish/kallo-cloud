@@ -1,5 +1,4 @@
 import { EtherealCopy } from "../EtherealCopy";
-import { ScreenShell } from "../ui";
 
 const CUE_LINES = [
   "Look up.",
@@ -11,10 +10,10 @@ const CUE_LINES = [
 
 export function CueScreen({ onTap }: { onTap: () => void }) {
   return (
-    <ScreenShell className="justify-center">
-      <div className="rounded-[34px] border border-white/10 bg-black/10 p-10 backdrop-blur-xl">
+    <div className="flex min-h-[100svh] items-center justify-center px-5">
+      <div className="glass rounded-[34px] p-10">
         <EtherealCopy lines={CUE_LINES} onTap={onTap} />
       </div>
-    </ScreenShell>
+    </div>
   );
 }

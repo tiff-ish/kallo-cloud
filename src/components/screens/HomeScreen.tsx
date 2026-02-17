@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import type { InstallPromptState } from "../../types";
+import type { JournalEntry, InstallPromptState } from "../../types";
+import { CLOUD_TYPES, CLOUD_TO_THUMBNAIL } from "../../lib/theme";
 import { SlideUp } from "../FadeIn";
-import { ScreenShell } from "../ui";
+import { GlassCard, FAB, PortalWindow, SectionLabel } from "../ui";
 import { Icon } from "../Icon";
+import { formatDate } from "../../lib/utils";
 
 function useClock() {
   const [now, setNow] = useState(new Date());
@@ -13,12 +15,22 @@ function useClock() {
   return now;
 }
 
+function getGreeting(d: Date): string {
+  const h = d.getHours();
+  if (h < 5) return "Clear skies tonight";
+  if (h < 12) return "Good Morning";
+  if (h < 17) return "Good Afternoon";
+  if (h < 21) return "Good Evening";
+  return "Clear skies tonight";
+}
+
 function formatTime(d: Date) {
   return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
 }
 
-function formatDay(d: Date) {
-  return d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+function getMostRecentCloudType(entries: JournalEntry[]): string | null {
+  if (entries.length === 0) return null;
+  return entries[0].cloudType;
 }
 
 export function HomeScreen({
@@ -27,108 +39,174 @@ export function HomeScreen({
   install,
   onShowCue,
   entryCount,
+  entries,
+  onSelectEntry,
 }: {
   onBegin: () => void;
   onLibrary: () => void;
   onShowCue: () => void;
   install: InstallPromptState;
   entryCount: number;
+  entries?: JournalEntry[];
+  onSelectEntry?: (id: string) => void;
 }) {
   const now = useClock();
-
-  const summaryText =
-    entryCount === 0
-      ? "No reflections yet. Look up and begin."
-      : entryCount === 1
-        ? "You have 1 reflection saved."
-        : `You have ${entryCount} reflections.`;
+  const greeting = getGreeting(now);
+  const recentEntries = (entries || []).slice(0, 6);
+  const currentCloud = getMostRecentCloudType(recentEntries);
+  const currentCloudInfo = CLOUD_TYPES.find((c) => c.slug === currentCloud);
 
   return (
-    <ScreenShell>
-      {/* Lock-screen-style header — rendered over the background photo */}
-      <div className="mb-6 px-1" style={{ textShadow: "0 2px 30px rgba(0,0,0,0.50)" }}>
-        <div className="text-[40px] font-bold leading-tight text-white/90">
-          {formatTime(now)}
-        </div>
-        <div className="mt-1 text-sm font-medium text-white/70">
-          {formatDay(now)}
-        </div>
-        <div className="mt-3 text-[15px] leading-relaxed text-white/80">
-          {summaryText}
-        </div>
+    <div className="relative flex min-h-[100svh] flex-col">
+      {/* Portal Window: Stadium-shaped sky view */}
+      <div className="mx-auto w-full max-w-[480px] px-5 pt-16">
+        <SlideUp>
+          <PortalWindow className="w-full">
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.25) 100%)",
+              }}
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-end pb-8 text-center">
+              <div className="font-serif-display text-lg font-medium text-white/80">
+                {formatTime(now)}
+              </div>
+              <div className="mt-1 text-xs font-medium text-white/60">
+                {now.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
+              </div>
+            </div>
+          </PortalWindow>
+        </SlideUp>
       </div>
 
-      {/* Notification-style action cards */}
-      <SlideUp>
-        <div className="grid gap-3">
-          {/* Ritual cue teaser */}
-          <button
-            onClick={onShowCue}
-            className="flex items-center gap-3 rounded-[24px] border border-white/15 bg-white/30 px-5 py-4 text-left backdrop-blur-xl transition hover:bg-white/45 focus:outline-none focus:ring-2 focus:ring-white/20"
-          >
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/40 ring-1 ring-white/20">
-              <span className="text-sm">&#9702;</span>
-            </div>
-            <div>
-              <div className="text-xs font-semibold text-[rgba(18,20,23,0.82)]">Cloud Journal</div>
-              <div className="mt-0.5 text-[13px] text-[rgba(18,20,23,0.62)]">A visual cue to slow down.</div>
-            </div>
-          </button>
+      {/* Content area below portal */}
+      <div className="mx-auto flex w-full max-w-[480px] flex-1 flex-col gap-4 px-5 pt-6 pb-32">
+        {/* Greeting: Full-width serif, personalized */}
+        <SlideUp>
+          <GlassCard className="p-6">
+            <h2 className="font-serif-display text-2xl font-bold text-[#2C3E50]">
+              {greeting}.
+            </h2>
+            {currentCloudInfo ? (
+              <div className="mt-2 flex items-center gap-2">
+                <img
+                  src={currentCloudInfo.image}
+                  alt={currentCloudInfo.name}
+                  className="h-7 w-7 object-contain"
+                />
+                <p className="text-sm text-[#546E7A]">
+                  Current Sky: <span className="font-medium text-[#2C3E50]">{currentCloudInfo.name}</span>
+                </p>
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-[#546E7A]">
+                {entryCount === 0
+                  ? "Look up and begin your first reflection"
+                  : `${entryCount} reflection${entryCount !== 1 ? "s" : ""} saved`}
+              </p>
+            )}
+          </GlassCard>
+        </SlideUp>
 
-          {/* Look up — primary action */}
-          <button
-            onClick={onBegin}
-            className="group flex items-center gap-4 rounded-[24px] border border-white/15 bg-white/42 px-5 py-5 text-left backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.18)] transition hover:bg-white/55 focus:outline-none focus:ring-2 focus:ring-white/20"
-          >
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/55 ring-1 ring-black/10">
-              <Icon name="plus" />
-            </div>
-            <div className="flex-1">
-              <div className="text-sm font-semibold text-[rgba(18,20,23,0.90)]">Look up</div>
-              <div className="mt-0.5 text-xs text-[rgba(18,20,23,0.60)]">Begin a moment</div>
-            </div>
-            <div className="text-[11px] text-[rgba(18,20,23,0.45)] group-hover:text-[rgba(18,20,23,0.65)]">tap</div>
-          </button>
-
-          {/* Past moments */}
-          <button
-            onClick={onLibrary}
-            className="group flex items-center gap-4 rounded-[24px] border border-white/15 bg-white/42 px-5 py-5 text-left backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.18)] transition hover:bg-white/55 focus:outline-none focus:ring-2 focus:ring-white/20"
-          >
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/55 ring-1 ring-black/10">
-              <Icon name="book" />
-            </div>
-            <div className="flex-1">
-              <div className="text-sm font-semibold text-[rgba(18,20,23,0.90)]">Past moments</div>
-              <div className="mt-0.5 text-xs text-[rgba(18,20,23,0.60)]">Re-enter an entry</div>
-            </div>
-            <div className="text-[11px] text-[rgba(18,20,23,0.45)] group-hover:text-[rgba(18,20,23,0.65)]">tap</div>
-          </button>
-
-          {/* iOS install hint */}
-          {install.isIos ? (
-            <div className="rounded-[20px] border border-white/15 bg-white/30 px-4 py-3 text-xs text-[rgba(18,20,23,0.66)] backdrop-blur-xl">
-              <span className="font-semibold text-[rgba(18,20,23,0.82)]">Want this as an app?</span>{" "}
-              Share &rarr; "Add to Home Screen".
-            </div>
-          ) : null}
-
-          {/* PWA install */}
-          {install.available ? (
-            <button
-              onClick={install.prompt}
-              className="flex items-center justify-center gap-2 rounded-[20px] border border-white/15 bg-white/35 px-4 py-3 text-sm font-semibold text-[rgba(18,20,23,0.82)] backdrop-blur-xl transition hover:bg-white/50"
+        {/* Quick Actions */}
+        <SlideUp>
+          <div className="grid grid-cols-2 gap-3">
+            <GlassCard
+              onClick={onShowCue}
+              className="cursor-pointer p-4 transition-all hover:bg-white/55 active:scale-[0.98]"
             >
-              <Icon name="download" />
-              Install this app
-            </button>
-          ) : null}
+              <div className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-white/50">
+                <Icon name="cloud" size={18} color="#2C3E50" />
+              </div>
+              <div className="mt-3 font-serif-display text-sm font-semibold text-[#2C3E50]">Cloud Cue</div>
+              <div className="mt-0.5 text-xs text-[#546E7A]">A visual pause</div>
+            </GlassCard>
 
-          <div className="pb-1 text-center text-[11px] text-white/50" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>
-            Made for noticing — not for tracking.
+            <GlassCard
+              onClick={onLibrary}
+              className="cursor-pointer p-4 transition-all hover:bg-white/55 active:scale-[0.98]"
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-white/50">
+                <Icon name="book" size={18} color="#2C3E50" />
+              </div>
+              <div className="mt-3 font-serif-display text-sm font-semibold text-[#2C3E50]">Library</div>
+              <div className="mt-0.5 text-xs text-[#546E7A]">Past moments</div>
+            </GlassCard>
           </div>
-        </div>
-      </SlideUp>
-    </ScreenShell>
+        </SlideUp>
+
+        {/* Recent Entries with cloud thumbnail backgrounds */}
+        {recentEntries.length > 0 && (
+          <SlideUp>
+            <SectionLabel className="mb-3 px-1">Recent Reflections</SectionLabel>
+            <div className="hide-scrollbar -mx-5 flex gap-3 overflow-x-auto px-5">
+              {recentEntries.map((entry) => {
+                const cloudInfo = CLOUD_TYPES.find((c) => c.slug === entry.cloudType);
+                const cloudName = cloudInfo?.name || "Moment";
+                const thumb = CLOUD_TO_THUMBNAIL[entry.cloudType] || "/thumbnails/neutral.jpg";
+                return (
+                  <button
+                    key={entry.id}
+                    onClick={() => onSelectEntry?.(entry.id)}
+                    className="relative w-[180px] shrink-0 overflow-hidden rounded-[20px] transition-all hover:scale-[1.02] active:scale-[0.97]"
+                    style={{ aspectRatio: "3/4" }}
+                  >
+                    {/* Sky thumbnail background */}
+                    <img
+                      src={thumb}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    {/* Gradient overlay */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: "linear-gradient(180deg, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.55) 100%)",
+                      }}
+                    />
+                    {/* Content overlay */}
+                    <div className="relative flex h-full flex-col justify-end p-4 text-left">
+                      <div className="text-[10px] font-medium uppercase tracking-wider text-white/75">
+                        {formatDate(entry.createdAt)}
+                      </div>
+                      <div className="mt-1 font-serif-display text-base font-semibold text-white drop-shadow-md">
+                        {cloudName}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </SlideUp>
+        )}
+
+        {/* iOS install hint */}
+        {install.isIos && (
+          <GlassCard className="p-4" variant="light">
+            <p className="text-xs text-[#546E7A]">
+              <span className="font-semibold text-[#2C3E50]">Want this as an app?</span>{" "}
+              Share &rarr; "Add to Home Screen".
+            </p>
+          </GlassCard>
+        )}
+
+        {/* PWA install */}
+        {install.available && (
+          <button
+            onClick={install.prompt}
+            className="glass flex items-center justify-center gap-2 rounded-[20px] px-4 py-3 text-sm font-semibold text-[#2C3E50] transition hover:bg-white/55"
+          >
+            <Icon name="download" size={16} color="#2C3E50" />
+            Install this app
+          </button>
+        )}
+      </div>
+
+      {/* FAB: Floating Action Button */}
+      <div className="fixed bottom-8 right-6 z-30 sm:right-[calc(50%-210px)]">
+        <FAB onClick={onBegin} />
+      </div>
+    </div>
   );
 }
