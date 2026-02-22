@@ -27,12 +27,12 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
 
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden" style={style}>
-      {/* Base gradient — the atmospheric teal sky */}
+      {/* Base gradient — diffused atmospheric field */}
       <div
         className="absolute inset-0"
         style={{
           background: `linear-gradient(165deg, var(--grad-start) 0%, var(--grad-end) 45%, var(--accent) 100%)`,
-          transition: "background 1200ms ease",
+          transition: "background 1200ms ease-in-out",
         }}
       />
 
@@ -43,7 +43,7 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
           className="absolute -inset-[8%] will-change-transform"
           style={{
             opacity: mood === m ? photoOpacity : 0,
-            transition: "opacity 1000ms ease",
+            transition: "opacity 1000ms ease-in-out",
             transform: `translate3d(calc(var(--px) * 0.06), calc(var(--py) * 0.06), 0)`,
             mixBlendMode: "soft-light",
           }}
@@ -58,7 +58,7 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
         </div>
       ))}
 
-      {/* Secondary gradient overlay for depth */}
+      {/* Multi-layer radial gradients for depth */}
       <div
         className="absolute inset-0"
         style={{
@@ -68,13 +68,13 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
             radial-gradient(ellipse 120% 70% at 80% 20%, var(--grad-end), transparent 55%),
             radial-gradient(ellipse 100% 60% at 50% 90%, var(--accent), transparent 50%)
           `,
-          transition: "opacity 1000ms ease",
+          transition: "opacity 1000ms ease-in-out",
         }}
       />
 
-      {/* Drifting cloud-like wisps */}
+      {/* Drifting wisps */}
       <div
-        className="absolute -inset-[30%] opacity-20 will-change-transform"
+        className="absolute -inset-[30%] opacity-15 will-change-transform"
         style={{ transform: `translate3d(calc(var(--px) * 0.1), calc(var(--py) * 0.1), 0)` }}
       >
         <div
@@ -82,9 +82,9 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
           style={{
             animation: "drift var(--drift) ease-in-out infinite",
             background: `
-              radial-gradient(800px 500px at 30% 25%, rgba(255,255,255,0.12), transparent 60%),
-              radial-gradient(900px 520px at 70% 40%, rgba(255,255,255,0.08), transparent 62%),
-              radial-gradient(700px 520px at 55% 72%, rgba(255,255,255,0.06), transparent 60%)
+              radial-gradient(800px 500px at 30% 25%, rgba(245,236,220,0.10), transparent 60%),
+              radial-gradient(900px 520px at 70% 40%, rgba(245,236,220,0.06), transparent 62%),
+              radial-gradient(700px 520px at 55% 72%, rgba(245,236,220,0.04), transparent 60%)
             `,
           }}
         />
@@ -95,8 +95,8 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
         className="absolute inset-0"
         style={{
           background: `
-            radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,255,255,0.08), transparent 50%),
-            linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.15))
+            radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,236,220,0.06), transparent 50%),
+            linear-gradient(to bottom, transparent 60%, rgba(22,23,28,0.12))
           `,
         }}
       />
@@ -105,7 +105,7 @@ export function Background({ theme, parallax }: { theme: Theme; parallax: Parall
       <div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse 120% 80% at 50% 45%, transparent 45%, rgba(0,0,0,0.2))`,
+          background: `radial-gradient(ellipse 120% 80% at 50% 45%, transparent 45%, rgba(22,23,28,0.18))`,
         }}
       />
     </div>

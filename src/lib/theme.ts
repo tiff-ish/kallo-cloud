@@ -1,31 +1,33 @@
 import type { Theme } from "../types";
 
-/* ─── Design Tokens: Cloud Journal "Atmospheric Glassmorphism" ─── */
+/* ─── Design Tokens: kallo-cloud Atmospheric System ─── */
 
 export const PALETTE = {
-  tealMuted: "#5F8D9B",
-  tealDark: "#3A5F6B",
-  skyBlue: "#8EB6C0",
-  white: "#FFFFFF",
-  offWhiteTransparent: "rgba(255, 255, 255, 0.65)",
-  textDark: "#2C3E50",
-  textMedium: "#546E7A",
-  textLight: "#FFFFFF",
-  glassBg: "rgba(255, 255, 255, 0.45)",
-  glassBorder: "rgba(255, 255, 255, 0.3)",
+  mistTeal: "#7FAFB3",
+  skyBlue: "#8EAFC7",
+  periwinkleFog: "#9CA8D6",
+  warmPaper: "#F5ECDC",
+  ink: "#16171C",
+  taupeMist: "#A89B91",
+  stormSlate: "#4B5C72",
+  softCloudWhite: "#F7F9FA",
+  textPrimary: "rgba(22, 23, 28, 0.92)",
+  textSecondary: "#4B5C72",
+  glassBg: "rgba(245, 236, 220, 0.50)",
+  glassBorder: "rgba(22, 23, 28, 0.10)",
 };
 
 export const CORNER_RADIUS = {
-  small: 12,
-  medium: 24,
-  large: 32,
-  portal: 100,
+  small: 14,
+  medium: 18,
+  large: 22,
+  pill: 999,
 };
 
 export const GLASS = {
-  backdropFilter: "blur(20px) saturate(180%)",
-  backgroundColor: "rgba(255, 255, 255, 0.45)",
-  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+  backdropFilter: "blur(20px) saturate(110%)",
+  backgroundColor: "rgba(245, 236, 220, 0.50)",
+  boxShadow: "0 14px 50px rgba(0, 0, 0, 0.12)",
   border: `1px solid ${PALETTE.glassBorder}`,
 };
 
@@ -66,69 +68,69 @@ type CloudTheme = {
 
 const CLOUD_THEMES: Record<string, CloudTheme> = {
   cirrus: {
-    gradientStart: "#6BA3B5",
-    gradientEnd: "#A8D4DE",
-    accent: "#D4EEF4",
+    gradientStart: "#7FAFB3",
+    gradientEnd: "#9CA8D6",
+    accent: "#D6DFF0",
     mood: "cool",
   },
   cumulus: {
-    gradientStart: "#5F8D9B",
-    gradientEnd: "#8EB6C0",
-    accent: "#E8F4F8",
+    gradientStart: "#7FAFB3",
+    gradientEnd: "#8EAFC7",
+    accent: "#E4ECF2",
     mood: "neutral",
   },
   cirrostratus: {
-    gradientStart: "#7A9EA8",
-    gradientEnd: "#B4D0D8",
-    accent: "#E0EFF4",
+    gradientStart: "#8EAFC7",
+    gradientEnd: "#9CA8D6",
+    accent: "#D6DFF0",
     mood: "cool",
   },
   nimbostratus: {
-    gradientStart: "#2C3E50",
-    gradientEnd: "#4A6572",
-    accent: "#7A9AA8",
+    gradientStart: "#2E3A48",
+    gradientEnd: "#4B5C72",
+    accent: "#6E7F92",
     mood: "deep",
   },
   cirrocumulus: {
-    gradientStart: "#6BA3B5",
-    gradientEnd: "#A8D4DE",
-    accent: "#D4EEF4",
+    gradientStart: "#8EAFC7",
+    gradientEnd: "#9CA8D6",
+    accent: "#D6DFF0",
     mood: "cool",
   },
   stratocumulus: {
-    gradientStart: "#4E7A86",
-    gradientEnd: "#7FA8B2",
-    accent: "#C4DDE4",
+    gradientStart: "#5E8A92",
+    gradientEnd: "#7FAFB3",
+    accent: "#C4D8DC",
     mood: "neutral",
   },
   stratus: {
-    gradientStart: "#5A7F8A",
-    gradientEnd: "#8AACB4",
-    accent: "#C8DEE4",
+    gradientStart: "#6A929A",
+    gradientEnd: "#8EAFC7",
+    accent: "#C8D8E2",
     mood: "neutral",
   },
   altocumulus: {
-    gradientStart: "#5E8E9C",
-    gradientEnd: "#90BCC6",
-    accent: "#D6EAF0",
+    gradientStart: "#6E9CA4",
+    gradientEnd: "#8EAFC7",
+    accent: "#D2E0EA",
     mood: "neutral",
   },
   altostratus: {
-    gradientStart: "#4A6E7A",
-    gradientEnd: "#7E9EA8",
-    accent: "#B8D2DA",
+    gradientStart: "#5A7E8A",
+    gradientEnd: "#7FAFB3",
+    accent: "#B8CED4",
     mood: "neutral",
   },
   cumulonimbus: {
-    gradientStart: "#1A2A34",
-    gradientEnd: "#3A5060",
-    accent: "#6A8A98",
+    gradientStart: "#1E2832",
+    gradientEnd: "#3A4A58",
+    accent: "#4B5C72",
     mood: "deep",
   },
   other: {
-    gradientStart: "#5F8D9B",
-    gradientEnd: "#8EB6C0",
-    accent: "#E8F4F8",
+    gradientStart: "#7FAFB3",
+    gradientEnd: "#8EAFC7",
+    accent: "#E4ECF2",
     mood: "neutral",
   },
 };
@@ -227,12 +229,12 @@ export function deriveTheme(cloudType: string, description: string): Theme {
     if (rule.keys.some((k) => text.includes(k))) {
       if (rule.mod.deepen) {
         moodOverride = "deep";
-        gradStart = lerpColor(gradStart, "#1A2A34", 0.4);
-        gradEnd = lerpColor(gradEnd, "#3A5060", 0.3);
+        gradStart = lerpColor(gradStart, "#1E2832", 0.4);
+        gradEnd = lerpColor(gradEnd, "#3A4A58", 0.3);
       } else if (rule.mod.warmth > 0.5) {
         moodOverride = "warm";
-        gradStart = lerpColor(gradStart, "#8B6B5A", 0.25);
-        gradEnd = lerpColor(gradEnd, "#C4A080", 0.2);
+        gradStart = lerpColor(gradStart, "#A89B91", 0.25);
+        gradEnd = lerpColor(gradEnd, "#C4B8A8", 0.2);
       }
       break;
     }

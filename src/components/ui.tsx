@@ -14,7 +14,7 @@ export function GlassCard({
 }) {
   const base =
     variant === "opaque"
-      ? "bg-white/[0.92] shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/60"
+      ? "bg-[#F5ECDC]/[0.92] shadow-[0_14px_50px_rgba(0,0,0,0.12)] border border-[#16171C]/10"
       : variant === "strong"
         ? "glass-strong"
         : variant === "light"
@@ -24,7 +24,7 @@ export function GlassCard({
   return (
     <div
       onClick={onClick}
-      className={`rounded-[24px] ${base} ${onClick ? "cursor-pointer" : ""} ${className}`}
+      className={`rounded-[22px] ${base} ${onClick ? "cursor-pointer" : ""} ${className}`}
     >
       {children}
     </div>
@@ -59,7 +59,7 @@ export function ScreenShell({
   );
 }
 
-/* ─── PortalWindow: Stadium-shaped sky view for the dashboard ─── */
+/* ─── PortalWindow: Rounded sky view for the dashboard ─── */
 export function PortalWindow({
   children,
   className = "",
@@ -69,15 +69,15 @@ export function PortalWindow({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-[100px] ${className}`}
-      style={{ aspectRatio: "4 / 5" }}
+      className={`relative overflow-hidden rounded-[32px] ${className}`}
+      style={{ aspectRatio: "3 / 4" }}
     >
       {children}
     </div>
   );
 }
 
-/* ─── PrimaryButton: Main CTA with teal/white theme ─── */
+/* ─── PrimaryButton: Ink bg + Warm Paper text ─── */
 export function PrimaryButton({
   children,
   className = "",
@@ -87,7 +87,7 @@ export function PrimaryButton({
     <button
       {...props}
       className={
-        "inline-flex items-center justify-center rounded-[20px] bg-white px-5 py-3.5 text-sm font-semibold text-[#2C3E50] shadow-[0_4px_20px_rgba(0,0,0,0.1)] transition-all hover:bg-white/90 hover:shadow-[0_6px_24px_rgba(0,0,0,0.15)] focus:outline-none focus:ring-2 focus:ring-white/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 " +
+        "inline-flex items-center justify-center rounded-full bg-[#16171C] px-6 py-3.5 text-sm font-semibold text-[#F5ECDC] shadow-[0_14px_50px_rgba(0,0,0,0.12)] transition-all hover:bg-[#2A2B32] focus:outline-none focus:ring-2 focus:ring-[#16171C]/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 " +
         className
       }
     >
@@ -96,7 +96,7 @@ export function PrimaryButton({
   );
 }
 
-/* ─── GhostButton: Secondary action with glass effect ─── */
+/* ─── GhostButton: Secondary translucent glass ─── */
 export function GhostButton({
   children,
   className = "",
@@ -106,7 +106,7 @@ export function GhostButton({
     <button
       {...props}
       className={
-        "inline-flex items-center justify-center rounded-[20px] border border-white/30 bg-white/25 px-5 py-3.5 text-sm font-semibold text-white shadow-sm backdrop-blur-md transition-all hover:bg-white/35 focus:outline-none focus:ring-2 focus:ring-white/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 " +
+        "inline-flex items-center justify-center rounded-full border border-[#16171C]/10 bg-[#F5ECDC]/30 px-5 py-3.5 text-sm font-semibold text-[#F7F9FA] backdrop-blur-md transition-all hover:bg-[#F5ECDC]/40 focus:outline-none focus:ring-2 focus:ring-[#F5ECDC]/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 " +
         className
       }
     >
@@ -115,7 +115,7 @@ export function GhostButton({
   );
 }
 
-/* ─── GlassButton: Wide glass-style button ─── */
+/* ─── GlassButton: Wide glass-style secondary button ─── */
 export function GlassButton({
   children,
   className = "",
@@ -125,7 +125,7 @@ export function GlassButton({
     <button
       {...props}
       className={
-        "glass inline-flex w-full items-center justify-center rounded-[20px] px-6 py-4 text-base font-semibold text-[#2C3E50] transition-all hover:bg-white/55 focus:outline-none focus:ring-2 focus:ring-white/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 " +
+        "glass inline-flex w-full items-center justify-center rounded-full px-6 py-4 text-base font-semibold text-[#16171C]/[0.88] transition-all hover:bg-[#F5ECDC]/60 focus:outline-none focus:ring-2 focus:ring-[#F5ECDC]/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 " +
         className
       }
     >
@@ -148,7 +148,7 @@ export function FAB({
     <button
       onClick={onClick}
       className={
-        "flex h-16 w-16 items-center justify-center rounded-full bg-white text-[#2C3E50] shadow-[0_8px_32px_rgba(0,0,0,0.18)] transition-all hover:shadow-[0_12px_40px_rgba(0,0,0,0.22)] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40 active:scale-95 " +
+        "flex h-16 w-16 items-center justify-center rounded-full bg-[#F5ECDC] text-[#16171C] shadow-[0_14px_50px_rgba(0,0,0,0.16)] transition-all hover:shadow-[0_18px_56px_rgba(0,0,0,0.20)] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#F5ECDC]/40 active:scale-95 " +
         className
       }
       style={{ animation: "pulseGlow 3s ease-in-out infinite" }}
@@ -193,22 +193,19 @@ export function BottomSheet({
 
   return (
     <div className="fixed inset-0 z-50">
-      {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300 ${animating ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 bg-[#16171C]/30 backdrop-blur-sm transition-opacity duration-300 ${animating ? "opacity-100" : "opacity-0"}`}
         onClick={onClose}
       />
-      {/* Sheet */}
       <div
         className={
-          `absolute inset-x-0 bottom-0 max-h-[88svh] overflow-y-auto rounded-t-[32px] glass-strong transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          `absolute inset-x-0 bottom-0 max-h-[88svh] overflow-y-auto rounded-t-[22px] glass-strong transition-transform duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] ${
             animating ? "translate-y-0" : "translate-y-full"
           } ` + className
         }
       >
-        {/* Drag Handle */}
         <div className="sticky top-0 z-10 flex justify-center pb-2 pt-3">
-          <div className="h-1 w-10 rounded-full bg-[#546E7A]/30" />
+          <div className="h-1 w-10 rounded-full bg-[#4B5C72]/25" />
         </div>
         <div className="px-6 pb-8">{children}</div>
       </div>
@@ -218,13 +215,13 @@ export function BottomSheet({
 
 /* ─── Divider ─── */
 export function Divider() {
-  return <div className="my-5 h-px w-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />;
+  return <div className="my-5 h-px w-full bg-gradient-to-r from-transparent via-[#16171C]/10 to-transparent" />;
 }
 
 /* ─── FrostedPill: for nav badges and tags ─── */
 export function FrostedPill({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={"rounded-full border border-white/25 bg-white/35 px-3 py-2 backdrop-blur-xl " + className}>
+    <div className={"rounded-full border border-[#16171C]/10 bg-[#F5ECDC]/35 px-3 py-2 backdrop-blur-xl " + className}>
       {children}
     </div>
   );
@@ -233,7 +230,7 @@ export function FrostedPill({ children, className = "" }: { children: React.Reac
 /* ─── SectionLabel: uppercase small label ─── */
 export function SectionLabel({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={"font-sans-body text-xs font-medium uppercase tracking-wider text-white/70 " + className}>
+    <div className={"font-sans-body text-xs font-medium uppercase tracking-wider text-[#F7F9FA]/70 " + className}>
       {children}
     </div>
   );

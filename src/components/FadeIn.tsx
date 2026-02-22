@@ -7,9 +7,9 @@ import type React from "react";
  */
 export function SlideUp({ children }: { children: React.ReactNode }) {
   return (
-    <div className="animate-[slideUp_400ms_cubic-bezier(0.16,1,0.3,1)]">
+    <div className="animate-[slideUp_350ms_cubic-bezier(0.4,0,0.2,1)]">
       {children}
-      <style>{`@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}`}</style>
+      <style>{`@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}`}</style>
     </div>
   );
 }

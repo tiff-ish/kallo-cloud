@@ -20,15 +20,15 @@ export function Dock({ current, onGo }: { current: DockTarget; onGo: (k: DockTar
               className={
                 "flex h-11 w-11 items-center justify-center rounded-full transition-all focus:outline-none " +
                 (current === b.k
-                  ? "bg-white/70 shadow-sm"
-                  : "bg-transparent hover:bg-white/30")
+                  ? "bg-[#F5ECDC]/60 shadow-sm"
+                  : "bg-transparent hover:bg-[#F5ECDC]/25")
               }
               aria-label={b.label}
             >
               <Icon
                 name={b.icon}
                 size={18}
-                color={current === b.k ? "#2C3E50" : "rgba(44,62,80,0.55)"}
+                color={current === b.k ? "#16171C" : "rgba(22,23,28,0.45)"}
               />
             </button>
           ))}
