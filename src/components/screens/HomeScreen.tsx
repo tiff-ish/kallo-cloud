@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import type { JournalEntry, InstallPromptState } from "../../types";
-import { CLOUD_TYPES, CLOUD_TO_THUMBNAIL } from "../../lib/theme";
+import { CLOUD_TYPES } from "../../lib/theme";
 import { SlideUp } from "../FadeIn";
-import { GlassCard, FAB, PortalWindow, SectionLabel } from "../ui";
+import { GlassCard, FAB } from "../ui";
 import { Icon } from "../Icon";
-import { formatDate } from "../../lib/utils";
 
 function useClock() {
   const [now, setNow] = useState(new Date());
@@ -17,20 +16,27 @@ function useClock() {
 
 function getGreeting(d: Date): string {
   const h = d.getHours();
-  if (h < 5) return "Clear skies tonight";
-  if (h < 12) return "Good Morning";
-  if (h < 17) return "Good Afternoon";
-  if (h < 21) return "Good Evening";
-  return "Clear skies tonight";
-}
-
-function formatTime(d: Date) {
-  return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  if (h < 5) return "Clear skies\ntonight";
+  if (h < 12) return "Good Morning,";
+  if (h < 17) return "Good Afternoon,";
+  if (h < 21) return "Good Evening,";
+  return "Clear skies\ntonight";
 }
 
 function getMostRecentCloudType(entries: JournalEntry[]): string | null {
   if (entries.length === 0) return null;
   return entries[0].cloudType;
+}
+
+function shortDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return "";
+  }
 }
 
 export function HomeScreen({
@@ -52,55 +58,58 @@ export function HomeScreen({
 }) {
   const now = useClock();
   const greeting = getGreeting(now);
-  const recentEntries = (entries || []).slice(0, 6);
-  const currentCloud = getMostRecentCloudType(recentEntries);
+  const recentEntries = (entries || []).slice(0, 2);
+  const currentCloud = getMostRecentCloudType(entries || []);
   const currentCloudInfo = CLOUD_TYPES.find((c) => c.slug === currentCloud);
+
+  const isNightGreeting = greeting.includes("tonight");
 
   return (
     <div className="relative flex min-h-[100svh] flex-col">
-      {/* Portal Window: Stadium-shaped sky view */}
+      {/* Sky Window */}
       <div className="mx-auto w-full max-w-[480px] px-5 pt-16">
         <SlideUp>
-          <PortalWindow className="w-full">
+          <div
+            className="relative w-full overflow-hidden rounded-[32px]"
+            style={{ aspectRatio: "3 / 4" }}
+          >
+            <img
+              src="/backgrounds/neutral.jpg"
+              alt="Sky view"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
             <div
               className="absolute inset-0"
               style={{
-                background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.25) 100%)",
+                background:
+                  "linear-gradient(180deg, transparent 50%, rgba(22,23,28,0.12) 100%)",
               }}
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-end pb-8 text-center">
-              <div className="font-serif-display text-lg font-medium text-white/80">
-                {formatTime(now)}
-              </div>
-              <div className="mt-1 text-xs font-medium text-white/60">
-                {now.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}
-              </div>
-            </div>
-          </PortalWindow>
+          </div>
         </SlideUp>
       </div>
 
-      {/* Content area below portal */}
-      <div className="mx-auto flex w-full max-w-[480px] flex-1 flex-col gap-4 px-5 pt-6 pb-32">
-        {/* Greeting: Full-width serif, personalized */}
+      {/* Content area */}
+      <div className="mx-auto flex w-full max-w-[480px] flex-1 flex-col gap-4 px-5 pt-5 pb-32">
+        {/* Greeting card */}
         <SlideUp>
           <GlassCard className="p-6">
-            <h2 className="font-serif-display text-2xl font-bold text-[#2C3E50]">
-              {greeting}.
+            <h2 className="font-serif-display text-[28px] leading-tight font-medium text-[#16171C]/[0.92]">
+              {isNightGreeting ? (
+                <>Clear skies<br />tonight.</>
+              ) : (
+                <>{greeting}<br />Tiffany.</>
+              )}
             </h2>
             {currentCloudInfo ? (
-              <div className="mt-2 flex items-center gap-2">
-                <img
-                  src={currentCloudInfo.image}
-                  alt={currentCloudInfo.name}
-                  className="h-7 w-7 object-contain"
-                />
-                <p className="text-sm text-[#546E7A]">
-                  Current Sky: <span className="font-medium text-[#2C3E50]">{currentCloudInfo.name}</span>
+              <div className="mt-3 flex items-center justify-between">
+                <p className="text-sm text-[#4B5C72]">
+                  Current Sky: <span className="font-medium text-[#16171C]/[0.92]">{currentCloudInfo.name}</span>
                 </p>
+                <Icon name="cloud" size={18} color="#4B5C72" />
               </div>
             ) : (
-              <p className="mt-2 text-sm text-[#546E7A]">
+              <p className="mt-3 text-sm text-[#4B5C72]">
                 {entryCount === 0
                   ? "Look up and begin your first reflection"
                   : `${entryCount} reflection${entryCount !== 1 ? "s" : ""} saved`}
@@ -109,102 +118,41 @@ export function HomeScreen({
           </GlassCard>
         </SlideUp>
 
-        {/* Quick Actions */}
-        <SlideUp>
-          <div className="grid grid-cols-2 gap-3">
-            <GlassCard
-              onClick={onShowCue}
-              className="cursor-pointer p-4 transition-all hover:bg-white/55 active:scale-[0.98]"
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-white/50">
-                <Icon name="cloud" size={18} color="#2C3E50" />
-              </div>
-              <div className="mt-3 font-serif-display text-sm font-semibold text-[#2C3E50]">Cloud Cue</div>
-              <div className="mt-0.5 text-xs text-[#546E7A]">A visual pause</div>
-            </GlassCard>
-
-            <GlassCard
-              onClick={onLibrary}
-              className="cursor-pointer p-4 transition-all hover:bg-white/55 active:scale-[0.98]"
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-white/50">
-                <Icon name="book" size={18} color="#2C3E50" />
-              </div>
-              <div className="mt-3 font-serif-display text-sm font-semibold text-[#2C3E50]">Library</div>
-              <div className="mt-0.5 text-xs text-[#546E7A]">Past moments</div>
-            </GlassCard>
-          </div>
-        </SlideUp>
-
-        {/* Recent Entries with cloud thumbnail backgrounds */}
+        {/* Recent entry cards */}
         {recentEntries.length > 0 && (
           <SlideUp>
-            <SectionLabel className="mb-3 px-1">Recent Reflections</SectionLabel>
-            <div className="hide-scrollbar -mx-5 flex gap-3 overflow-x-auto px-5">
+            <div className="grid grid-cols-2 gap-3">
               {recentEntries.map((entry) => {
                 const cloudInfo = CLOUD_TYPES.find((c) => c.slug === entry.cloudType);
                 const cloudName = cloudInfo?.name || "Moment";
-                const thumb = CLOUD_TO_THUMBNAIL[entry.cloudType] || "/thumbnails/neutral.jpg";
+
                 return (
-                  <button
+                  <GlassCard
                     key={entry.id}
                     onClick={() => onSelectEntry?.(entry.id)}
-                    className="relative w-[180px] shrink-0 overflow-hidden rounded-[20px] transition-all hover:scale-[1.02] active:scale-[0.97]"
-                    style={{ aspectRatio: "3/4" }}
+                    className="cursor-pointer p-3.5 transition-all hover:bg-[#F5ECDC]/60 active:scale-[0.98]"
                   >
-                    {/* Sky thumbnail background */}
-                    <img
-                      src={thumb}
-                      alt=""
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                    {/* Gradient overlay */}
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background: "linear-gradient(180deg, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.55) 100%)",
-                      }}
-                    />
-                    {/* Content overlay */}
-                    <div className="relative flex h-full flex-col justify-end p-4 text-left">
-                      <div className="text-[10px] font-medium uppercase tracking-wider text-white/75">
-                        {formatDate(entry.createdAt)}
-                      </div>
-                      <div className="mt-1 font-serif-display text-base font-semibold text-white drop-shadow-md">
-                        {cloudName}
-                      </div>
+                    <div className="flex items-start justify-between">
+                      <img
+                        src={cloudInfo?.image || "/clouds/other.png"}
+                        alt={cloudName}
+                        className="h-10 w-10 rounded-[10px] object-contain"
+                      />
+                      <Icon name="edit" size={14} color="rgba(75,92,114,0.40)" />
                     </div>
-                  </button>
+                    <div className="mt-2.5 text-xs text-[#4B5C72]">
+                      {shortDate(entry.createdAt)} &middot; {cloudName}
+                    </div>
+                  </GlassCard>
                 );
               })}
             </div>
           </SlideUp>
         )}
-
-        {/* iOS install hint */}
-        {install.isIos && (
-          <GlassCard className="p-4" variant="light">
-            <p className="text-xs text-[#546E7A]">
-              <span className="font-semibold text-[#2C3E50]">Want this as an app?</span>{" "}
-              Share &rarr; "Add to Home Screen".
-            </p>
-          </GlassCard>
-        )}
-
-        {/* PWA install */}
-        {install.available && (
-          <button
-            onClick={install.prompt}
-            className="glass flex items-center justify-center gap-2 rounded-[20px] px-4 py-3 text-sm font-semibold text-[#2C3E50] transition hover:bg-white/55"
-          >
-            <Icon name="download" size={16} color="#2C3E50" />
-            Install this app
-          </button>
-        )}
       </div>
 
-      {/* FAB: Floating Action Button */}
-      <div className="fixed bottom-8 right-6 z-30 sm:right-[calc(50%-210px)]">
+      {/* FAB: Centered */}
+      <div className="fixed bottom-8 left-1/2 z-30 -translate-x-1/2">
         <FAB onClick={onBegin} />
       </div>
     </div>

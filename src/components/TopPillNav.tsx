@@ -15,12 +15,12 @@ export function TopPillNav({
       <div className="mx-auto flex max-w-[480px] items-center justify-between px-5 py-2">
         {/* App Identity */}
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-[12px] bg-white/40 backdrop-blur-md">
-            <Icon name="cloud" size={18} color="#2C3E50" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-[14px] bg-[#F5ECDC]/35 backdrop-blur-md">
+            <Icon name="cloud" size={18} color="#F7F9FA" />
           </div>
           <div>
-            <div className="font-serif-display text-sm font-semibold text-white">Cloud Journal</div>
-            <div className="text-[10px] text-white/55">a tiny ritual</div>
+            <div className="font-serif-display text-sm font-semibold text-[#F7F9FA]">Cloud Journal</div>
+            <div className="text-[10px] text-[#F7F9FA]/50">a tiny ritual</div>
           </div>
         </div>
 
@@ -39,8 +39,8 @@ export function TopPillNav({
               className={
                 "rounded-full px-3 py-1.5 text-[11px] font-semibold transition-all focus:outline-none " +
                 (active === t.k
-                  ? "bg-white/60 text-[#2C3E50] shadow-sm"
-                  : "text-[#2C3E50]/55 hover:bg-white/30 hover:text-[#2C3E50]/80")
+                  ? "bg-[#F5ECDC]/55 text-[#16171C]/[0.88] shadow-sm"
+                  : "text-[#16171C]/45 hover:bg-[#F5ECDC]/30 hover:text-[#16171C]/70")
               }
             >
               {t.label}
@@ -52,9 +52,9 @@ export function TopPillNav({
         {install.available ? (
           <button
             onClick={install.prompt}
-            className="hidden items-center gap-1.5 rounded-full bg-white/30 px-3 py-1.5 text-[11px] font-semibold text-white/80 backdrop-blur-md hover:bg-white/40 sm:inline-flex"
+            className="hidden items-center gap-1.5 rounded-full bg-[#F5ECDC]/25 px-3 py-1.5 text-[11px] font-semibold text-[#F7F9FA]/80 backdrop-blur-md hover:bg-[#F5ECDC]/35 sm:inline-flex"
           >
-            <Icon name="download" size={14} color="rgba(255,255,255,0.8)" />
+            <Icon name="download" size={14} color="rgba(247,249,250,0.8)" />
             Install
           </button>
         ) : (

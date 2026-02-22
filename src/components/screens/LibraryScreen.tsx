@@ -19,10 +19,10 @@ export function LibraryScreen({
         <SlideUp>
           {/* Header */}
           <div className="mb-6">
-            <h1 className="font-serif-display text-3xl font-bold text-white">
+            <h1 className="font-serif-display text-3xl font-semibold text-[#F7F9FA]">
               Library
             </h1>
-            <p className="mt-1 text-sm text-white/65">
+            <p className="mt-1 text-sm text-[#F7F9FA]/60">
               {entries.length === 0
                 ? "No reflections yet"
                 : `${entries.length} moment${entries.length !== 1 ? "s" : ""} captured`}
@@ -33,13 +33,13 @@ export function LibraryScreen({
           <div className="grid gap-3">
             {entries.length === 0 ? (
               <GlassCard className="p-6 text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/30">
-                  <Icon name="cloud" size={28} color="#2C3E50" />
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#F5ECDC]/30">
+                  <Icon name="cloud" size={28} color="#16171C" />
                 </div>
-                <p className="mt-4 font-serif-display text-lg font-semibold text-[#2C3E50]">
+                <p className="mt-4 font-serif-display text-lg font-semibold text-[#16171C]/[0.92]">
                   No entries yet
                 </p>
-                <p className="mt-1 text-sm text-[#546E7A]">
+                <p className="mt-1 text-sm text-[#4B5C72]">
                   Tap the + button to begin a moment
                 </p>
               </GlassCard>
@@ -53,13 +53,13 @@ export function LibraryScreen({
                     key={e.id}
                     onClick={() => onSelect(e.id)}
                     className={
-                      "flex gap-4 rounded-[20px] p-4 text-left transition-all focus:outline-none " +
+                      "flex gap-4 rounded-[18px] p-4 text-left transition-all focus:outline-none " +
                       (isActive
-                        ? "glass-strong ring-1 ring-white/40"
-                        : "glass hover:bg-white/55 active:scale-[0.98]")
+                        ? "glass-strong ring-1 ring-[#F7F9FA]/30"
+                        : "glass hover:bg-[#F5ECDC]/60 active:scale-[0.98]")
                     }
                   >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-white/40">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[#F5ECDC]/40">
                       <img
                         src={cloudInfo?.image || "/clouds/other.png"}
                         alt={cloudInfo?.name || "Cloud"}
@@ -68,10 +68,10 @@ export function LibraryScreen({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-serif-display text-sm font-semibold text-[#2C3E50]">
+                        <span className="font-serif-display text-sm font-semibold text-[#16171C]/[0.92]">
                           {cloudInfo?.name || "Moment"}
                         </span>
-                        <span className="text-[10px] font-medium text-[#546E7A]/60">
+                        <span className="text-[10px] font-medium text-[#4B5C72]/60">
                           {new Date(e.createdAt).toLocaleDateString(undefined, {
                             month: "short",
                             day: "numeric",
@@ -79,11 +79,11 @@ export function LibraryScreen({
                         </span>
                       </div>
                       {e.cloudDescription?.trim() && (
-                        <div className="mt-0.5 text-xs text-[#546E7A] line-clamp-1">
+                        <div className="mt-0.5 text-xs text-[#4B5C72] line-clamp-1">
                           {e.cloudDescription.trim()}
                         </div>
                       )}
-                      <div className="mt-1 text-xs text-[#546E7A]/70 line-clamp-2">
+                      <div className="mt-1 text-xs text-[#4B5C72]/70 line-clamp-2">
                         {(e.reflection || "").trim().slice(0, 86)}
                         {(e.reflection || "").trim().length > 86 ? "..." : ""}
                       </div>
@@ -95,7 +95,7 @@ export function LibraryScreen({
           </div>
 
           {entries.length > 40 && (
-            <p className="mt-4 text-center text-xs text-white/50">
+            <p className="mt-4 text-center text-xs text-[#F7F9FA]/50">
               Showing the most recent 40
             </p>
           )}

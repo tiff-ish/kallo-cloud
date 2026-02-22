@@ -25,35 +25,35 @@ export function PauseScreen({ onSkip, onDone }: { onSkip: () => void; onDone: ()
         <SlideUp>
           <GlassCard className="p-8 text-center">
             {/* Timer circle */}
-            <div className="mx-auto mb-6 flex h-28 w-28 items-center justify-center rounded-full border-2 border-white/25">
-              <div className="font-serif-display text-5xl font-bold text-[#2C3E50]">
+            <div className="mx-auto mb-6 flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#F7F9FA]/20">
+              <div className="font-serif-display text-5xl font-semibold text-[#16171C]/[0.92]">
                 {Math.max(0, t)}
               </div>
             </div>
 
-            <h2 className="font-serif-display text-2xl font-semibold text-[#2C3E50]">
+            <h2 className="font-serif-display text-2xl font-semibold text-[#16171C]/[0.92]">
               Look up.
             </h2>
-            <p className="mt-2 text-sm text-[#546E7A]">
+            <p className="mt-2 text-sm text-[#4B5C72]">
               Let your eyes rest on one part of the sky.
             </p>
 
             {/* Progress bar */}
-            <div className="mx-auto mt-6 h-1 w-3/4 overflow-hidden rounded-full bg-[#2C3E50]/10">
+            <div className="mx-auto mt-6 h-1 w-3/4 overflow-hidden rounded-full bg-[#16171C]/8">
               <div
-                className="h-full rounded-full bg-[#5F8D9B] transition-all duration-1000 ease-linear"
+                className="h-full rounded-full bg-[#7FAFB3] transition-all duration-1000 ease-linear"
                 style={{ width: `${progress}%` }}
               />
             </div>
 
             <Divider />
 
-            <p className="text-sm text-[#546E7A]">
+            <p className="text-sm text-[#4B5C72]">
               Breathe once. Nothing to do.
             </p>
 
             <div className="mt-5 flex items-center gap-3">
-              <GhostButton onClick={onSkip} className="flex-1 text-[#2C3E50]">
+              <GhostButton onClick={onSkip} className="flex-1 text-[#16171C]/[0.88]">
                 Skip
               </GhostButton>
               <GlassButton onClick={onDone} className="flex-1">
@@ -61,7 +61,7 @@ export function PauseScreen({ onSkip, onDone }: { onSkip: () => void; onDone: ()
               </GlassButton>
             </div>
 
-            <p className="mt-4 text-xs text-[#546E7A]/50">
+            <p className="mt-4 text-xs text-[#4B5C72]/50">
               The sky is the teacher. The app is just the reminder.
             </p>
           </GlassCard>
